@@ -22,7 +22,7 @@ Enter the password and you'll be connected to the VPN. The message "Initializati
 In the second terminal, you connect to the broker to be able to see the messages sent by the observer to the broker:
 ```bash
 cd ~/sensorlab/sensorlab-server/
-python server.py --broker_address sensorlab-server.local --broker_port 1883
+python server.py --broker_address broker.local --broker_port 1883
 ```
 **Warning:** You have to leave this terminal open until the end of the experiment !
 
@@ -59,8 +59,8 @@ observer<ID> device:ready serial:hdlc
 ### Scenario Mode
 Setup the IO Module to connect the observer to the broker:
 ```bash
->io setup experiment sensorlab-server.local 1883 60 <ID>
-observer <ID> state:ready broker: sensorlab-server.local:1883 source:experiment
+>io setup experiment broker.local 1883 60 <ID>
+observer <ID> state:ready broker: broker.local:1883 source:experiment
 ```
 Setup an experiment scenario by loading the experiment archive (in this exemple, I use an archive that runs the node for 10 min):
 ```bash
