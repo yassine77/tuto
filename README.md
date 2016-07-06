@@ -1,24 +1,24 @@
 # Sensorlab
-##Brief
+## Brief
 This document is a tutorial that describes how to use **Sensorlab-cli**, the command line interface used to control the nodes remotely.
-##Important
+## Important
 1. For this laptop, the admin's username is **lora** and the password is **Nougat26***.
 2. All directories related to the Sensorlab project, are located in "/home/lora/sensorlab/" , thus, every file's relative path is specified from this location. 
 eg. if the relative path to a file named "lora.c" is "./loradir/lora.c", the absolute path is "/home/lora/sensorlab/loradir/lora.c".
 3. Three open terminals are needed, for the VPN connection, the connection as a subscriber to the MQTT broker, and for the command line interface **sensorlab-cli**. They have to be kept open.  
 
 
-##Connect as a client to the OpenVpn Server  
-The client configuration is already established in the file "./openvpn/conf/client.conf". So, to connect to the VPN, all you have to do is to run in a terminal this line of commands:
-```bash
-cd ~/sensorlab/openvpn/
-sudo openvpn --config client.conf
-```
-Enter the password and you'll be connected to the VPN. The message "Initialization Sequence Completed" should be displayed.
+## Connect as a client to the OpenVpn Server  
 
-**Warning:** You have to leave this terminal open and not touch it during this whole process, otherwise you will be disconnected from the VPN.
+Click the network manager icon in the top menu bar and select **Connexions VPN** then **sensorlab**:
 
-##Connection to the broker as a subscriber
+![alt text](/home/lora/Bureau/readme/vpn1.png)
+
+and 
+
+![alt text](/home/lora/Bureau/readme/vpn2.png)
+
+## Connection to the broker as a subscriber
 In the second terminal, you connect to the broker to be able to see the messages sent by the observer to the broker:
 ```bash
 cd ~/sensorlab/sensorlab-server/
@@ -26,7 +26,7 @@ python server.py --broker_address broker.local --broker_port 1883
 ```
 **Warning:** You have to leave this terminal open until the end of the experiment !
 
-##Sensorlab-cli
+## Sensorlab-cli
 ### Notations
 1. Lines that begins with > are commands, the next one without > is the status, displayed automatically after a command.
 2. ID = ID of case, eg. for the node 12, the command "node status <ID>" should be "node status 12".
@@ -46,15 +46,6 @@ The next step is to setup the node controller and serial drivers :
 >node setup /home/lora/sensorlab/sensorlab-node/nucleolora/profiles/hdlc/nucleolora-profile.tar.gz <ID>
 observer<ID> device:configured serial:hdlc
 ```
-Load the firmware into the node hardware:
-```bash
->node load lora /home/lora/sensorlab/firmwares/LoRaMac_1.bin 4
-observer<ID> device:ready serial:hdlc
-```
-```bash
->node load lora /home/lora/sensorlab/firmwares/LoRaMac_2.bin 5
-observer<ID> device:ready serial:hdlc
-```
 
 ### Scenario Mode
 Setup the IO Module to connect the observer to the broker:
@@ -64,9 +55,11 @@ observer <ID> state:ready broker: broker.local:1883 source:experiment
 ```
 Setup an experiment scenario by loading the experiment archive (in this exemple, I use an archive that runs the node for 10 min):
 ```bash
->experiment setup scenario /home/lora/sensorlab/sensorlab-experiment/loranucleo-behaviors/loramac-10min/loramac-10min.tar.gz <ID>
+>experiment setup scenario /home/lora/sensorlab/sensorlab-experiment/loranucleo-behaviors/loramac-10min/<experiment-archive> <ID>
 observer<ID> behavior:scenario state:ready remaining/duration : undefined/600
 ```
+PS: <experiment-archive> is the name of the chosen archive depending on the activation mode (ABP or OTAA). 
+
 Start the IO module:
 ```bash
 >io start <ID>
@@ -90,14 +83,14 @@ then
 ```bash
 >io stop <ID>
 ```
-##Wireshark
+## Wireshark
 By the end of the experiment, a .pcap file is generated, which, after opening it in wireshark, you can see all downlink and uplink frames of each node.  
 To open this file in wireshark, open a new terminal and:
 ```bash
 wireshark ~/sensorlab/sensorlab-server/sensorlab.pcap
 ```
 
-##JSON file
+## JSON file
 It is possible to generate a JSON file from the previous PCAP:
 ```bash
 cp ~/sensorlab/sensorlab-server/sensorlab.pcap ~/sensorlab/sensorlab-parser/pcap/
